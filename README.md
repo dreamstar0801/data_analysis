@@ -27,6 +27,11 @@ The analysis focuses on understanding:
 
   * Reproducible channel and regional analysis
   * Data quality auditing
+* Power BI
+
+  * Star-schema semantic model (TMDL)
+  * Power Query cleaning pipeline
+  * DAX measure library, including time intelligence and mix-shift analysis
 * Git & GitHub
 
   * Version Control
@@ -77,6 +82,30 @@ Each rule exists because of a row count in Q6:
 | `27inches 4k gaming monitor` vs `27in 4K gaming monitor` | 61 | Collapsed to one SKU |
 | `ship_ts` earlier than `purchase_ts` | ~2,000 | Flagged, excluded from ship-time averages |
 | Country codes missing or absent from the lookup | 43 | Fall into `Unmapped`, reported |
+
+## Power BI Model
+
+The same analysis as a semantic model and four-page report, stored in **PBIP**
+format: TMDL for the model and JSON for the report, so the DAX and the Power
+Query steps are reviewable in a diff rather than sealed inside a binary `.pbix`.
+
+**Folder:** [`powerbi/`](powerbi/) — open [`powerbi/GameZone.pbip`](powerbi/GameZone.pbip)
+in Power BI Desktop and point the `RepoPath` parameter at your clone.
+
+| | |
+|---|---|
+| Model | Star schema: `Orders` fact joined to `Country` and a marked `Date` table |
+| Cleaning | Power Query steps mirroring the SQL script one for one |
+| Measures | 35 in [`powerbi/dax/measures.dax`](powerbi/dax/measures.dax) — revenue, AOV, refund rate, share, YoY, ranking, fulfilment, data quality |
+| Report | Executive summary, Channel, Region and product, Data quality |
+
+Two design decisions worth naming:
+
+* **The `$0` rows are flagged, not filtered.** All 21,719 deduplicated rows load; `is_revenue_eligible` marks the 34 artifacts and every revenue measure filters on that flag. A defect removed at load time is a defect nobody can audit.
+* **The model tests itself.** `[Model Check]` sits on a card and returns OK only while the model reproduces `sql/gamezone_channel_region_analysis.sql` exactly — $6,103,484.09 across 21,685 orders. If a query step is ever edited in a way that changes the grain, the card says MISMATCH instead of the number quietly drifting.
+
+Power BI Desktop is Windows-only and Excel for Mac has no Power Pivot; see
+[`powerbi/RUNNING_ON_MACOS.md`](powerbi/RUNNING_ON_MACOS.md).
 
 ## Dataset
 
@@ -161,6 +190,15 @@ E_commerce_DA/
 ├── sql/
 │   └── gamezone_channel_region_analysis.sql
 │
+├── powerbi/
+│   ├── GameZone.pbip                 # open this in Power BI Desktop
+│   ├── README.md                     # model design, cleaning rules, validation
+│   ├── RUNNING_ON_MACOS.md           # options when you do not have Windows
+│   ├── GameZone.SemanticModel/       # TMDL: tables, relationships, measures
+│   ├── GameZone.Report/              # report.json: 4 pages, 36 visuals
+│   └── dax/
+│       └── measures.dax              # the measure library as portable text
+│
 ├── data/
 │   ├── orders.csv            # extract of the orders sheet, raw and uncleaned
 │   └── region_lookup.csv     # country code to region mapping
@@ -182,7 +220,7 @@ E_commerce_DA/
 
 ## Future Improvements
 
-* Build an interactive Tableau dashboard
-* Add KPI summary metrics
-* Extend the region lookup so North American and Caribbean country codes map cleanly
-* Perform deeper customer segmentation analysis
+* Publish the Power BI report to the service with scheduled refresh, which means moving the CSVs behind a gateway or into cloud storage
+* Extend the region lookup so North American and Caribbean country codes map cleanly, and retire the six-code analyst patch
+* Perform deeper customer segmentation analysis, starting with repeat-purchase rate by acquisition channel
+* Add a cohort view: does the channel a customer arrives through predict their second order?

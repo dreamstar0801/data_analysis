@@ -1,0 +1,265 @@
+/* ============================================================================
+   GameZone - DAX measure library
+   ----------------------------------------------------------------------------
+   Author  : Sohee Cho
+   Model   : powerbi/GameZone.SemanticModel  (Orders, Country, Date, _Measures)
+
+   Portability note
+   ----------------
+   Every measure below is written against the DAX function set that exists in
+   BOTH Power BI and Excel Power Pivot. ALL() is used in place of the newer
+   REMOVEFILTERS(), and no calculation groups or window functions (OFFSET,
+   INDEX, WINDOW) appear, so each definition pastes straight into the Power
+   Pivot measure grid, into Analysis Services, or into the Power BI Service web
+   modelling editor and behaves identically.
+
+   Note that Power Pivot exists only in Excel for Windows - Excel for Mac has
+   no Data Model at all. See powerbi/RUNNING_ON_MACOS.md.
+
+   Grain and eligibility
+   ---------------------
+   Orders is loaded at one row per order_id (145 duplicate ids removed in
+   Power Query). Rows with a $0 or null price are deliberately KEPT in the
+   table and flagged is_revenue_eligible = FALSE, rather than filtered out at
+   load. That way the data-quality measures can still count and describe them
+   instead of them silently vanishing from the model.
+   ============================================================================ */
+
+
+/* ---------------------------------------------------------------------------
+   1. CORE VOLUME AND VALUE
+   --------------------------------------------------------------------------- */
+
+Total Revenue =
+CALCULATE (
+    SUM ( Orders[usd_price] ),
+    Orders[is_revenue_eligible] = TRUE
+)
+
+Order Count =
+CALCULATE (
+    DISTINCTCOUNT ( Orders[order_id] ),
+    Orders[is_revenue_eligible] = TRUE
+)
+
+Customers =
+CALCULATE (
+    DISTINCTCOUNT ( Orders[user_id] ),
+    Orders[is_revenue_eligible] = TRUE
+)
+
+AOV =
+DIVIDE ( [Total Revenue], [Order Count] )
+
+Revenue per Customer =
+DIVIDE ( [Total Revenue], [Customers] )
+
+
+/* ---------------------------------------------------------------------------
+   2. REFUNDS
+   A refund is recorded as a non-null refund_ts, so the flag is set in Power
+   Query and the measure only has to filter it. Refund rate is order-weighted,
+   not revenue-weighted; [Refund Rate by Value] gives the dollar view, and the
+   two differ because refunded orders skew slightly higher in price.
+   --------------------------------------------------------------------------- */
+
+Refunded Orders =
+CALCULATE ( [Order Count], Orders[is_refunded] = TRUE )
+
+Refund Rate =
+DIVIDE ( [Refunded Orders], [Order Count] )
+
+Refunded Revenue =
+CALCULATE ( [Total Revenue], Orders[is_refunded] = TRUE )
+
+Refund Rate by Value =
+DIVIDE ( [Refunded Revenue], [Total Revenue] )
+
+Net Revenue =
+[Total Revenue] - [Refunded Revenue]
+
+
+/* ---------------------------------------------------------------------------
+   3. SHARE AND MIX
+   [Revenue % of Total] ignores every filter and answers "share of the whole
+   business". [Revenue % of Visible Total] respects slicers and answers "share
+   of what is on screen" - the one you want inside a filtered page.
+   --------------------------------------------------------------------------- */
+
+Revenue % of Total =
+DIVIDE (
+    [Total Revenue],
+    CALCULATE ( [Total Revenue], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) )
+)
+
+Revenue % of Visible Total =
+DIVIDE (
+    [Total Revenue],
+    CALCULATE ( [Total Revenue], ALLSELECTED () )
+)
+
+Channel Share =
+DIVIDE (
+    [Total Revenue],
+    CALCULATE ( [Total Revenue], ALL ( Orders[marketing_channel] ) )
+)
+
+Region Share =
+DIVIDE (
+    [Total Revenue],
+    CALCULATE ( [Total Revenue], ALL ( Country[region] ) )
+)
+
+
+/* ---------------------------------------------------------------------------
+   4. TIME INTELLIGENCE
+   Requires the marked Date table and the Orders[purchase_date] relationship.
+   The mix-shift measure is the one that carries the actual finding: direct
+   fell from 85.6% to 81.4% of revenue between 2019 and 2021 while email rose
+   from 8.2% to 14.3%. Expressed in percentage points, because a "share of a
+   share" percentage change is the classic way to mislead yourself here.
+   --------------------------------------------------------------------------- */
+
+Revenue LY =
+CALCULATE ( [Total Revenue], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+
+Revenue YoY =
+[Total Revenue] - [Revenue LY]
+
+Revenue YoY % =
+DIVIDE ( [Total Revenue] - [Revenue LY], [Revenue LY] )
+
+Channel Share LY =
+CALCULATE ( [Channel Share], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+
+Channel Mix Shift (pp) =
+IF (
+    NOT ISBLANK ( [Channel Share LY] ),
+    ( [Channel Share] - [Channel Share LY] ) * 100
+)
+
+Revenue YTD =
+TOTALYTD ( [Total Revenue], 'Date'[Date] )
+
+
+/* ---------------------------------------------------------------------------
+   5. RANKING AND TOP-N
+   The HASONEVALUE guard stops the rank from rendering a meaningless "1" on
+   the total row of a matrix, which is the single most common RANKX bug.
+   --------------------------------------------------------------------------- */
+
+Region Revenue Rank =
+IF (
+    HASONEVALUE ( Country[region] ),
+    RANKX ( ALLSELECTED ( Country[region] ), [Total Revenue], , DESC, DENSE )
+)
+
+Channel Revenue Rank =
+IF (
+    HASONEVALUE ( Orders[marketing_channel] ),
+    RANKX ( ALLSELECTED ( Orders[marketing_channel] ), [Total Revenue], , DESC, DENSE )
+)
+
+Top Product =
+VAR TopRow =
+    TOPN ( 1, VALUES ( Orders[product_name] ), [Total Revenue], DESC )
+RETURN
+    CONCATENATEX ( TopRow, Orders[product_name], ", " )
+
+Top Product Revenue =
+MAXX ( VALUES ( Orders[product_name] ), [Total Revenue] )
+
+
+/* ---------------------------------------------------------------------------
+   6. FULFILMENT
+   days_to_ship is computed in Power Query and can be negative, because about
+   9% of orders carry a ship date BEFORE the purchase date. The average
+   deliberately excludes those rows - averaging a known-impossible negative
+   into a fulfilment KPI would quietly flatter it.
+   --------------------------------------------------------------------------- */
+
+Avg Days to Ship =
+CALCULATE (
+    AVERAGE ( Orders[days_to_ship] ),
+    Orders[has_ship_before_purchase] = FALSE
+)
+
+Median Days to Ship =
+CALCULATE (
+    MEDIAN ( Orders[days_to_ship] ),
+    Orders[has_ship_before_purchase] = FALSE
+)
+
+
+/* ---------------------------------------------------------------------------
+   7. DATA QUALITY
+   These are measures, not annotations in a slide footer. Putting the known
+   defects on the report as live numbers is the difference between an analysis
+   that has been audited and one that merely looks clean.
+   --------------------------------------------------------------------------- */
+
+Total Rows =
+COUNTROWS ( Orders )
+
+Orders Shipped Before Purchase =
+CALCULATE (
+    COUNTROWS ( Orders ),
+    Orders[has_ship_before_purchase] = TRUE
+)
+
+% Shipped Before Purchase =
+DIVIDE ( [Orders Shipped Before Purchase], [Total Rows] )
+
+Excluded Zero-Price Orders =
+CALCULATE (
+    COUNTROWS ( Orders ),
+    Orders[is_revenue_eligible] = FALSE
+)
+
+Orders Missing Purchase Date =
+CALCULATE (
+    COUNTROWS ( Orders ),
+    ISBLANK ( Orders[purchase_date] )
+)
+
+Unmapped Revenue =
+CALCULATE ( [Total Revenue], Country[region] = "Unmapped" )
+
+Unmapped Revenue % =
+DIVIDE (
+    [Unmapped Revenue],
+    CALCULATE ( [Total Revenue], ALL ( Country ) )
+)
+
+Revenue on Analyst-Patched Regions =
+CALCULATE ( [Total Revenue], Country[region_source] = "analyst patch" )
+
+Revenue on Analyst-Patched Regions % =
+DIVIDE (
+    [Revenue on Analyst-Patched Regions],
+    CALCULATE ( [Total Revenue], ALL ( Country ) )
+)
+
+
+/* ---------------------------------------------------------------------------
+   8. VALIDATION HARNESS
+   [Model Check] returns OK only when the model reproduces the SQL baseline in
+   sql/gamezone_channel_region_analysis.sql. Drop it on a card; if a Power
+   Query step is ever edited in a way that changes the grain, the card turns
+   red on refresh instead of the number quietly drifting.
+   --------------------------------------------------------------------------- */
+
+Model Check =
+VAR ExpectedRevenue = 6103484.09
+VAR ExpectedOrders = 21685
+VAR ActualRevenue =
+    ROUND ( CALCULATE ( [Total Revenue], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) ), 2 )
+VAR ActualOrders =
+    CALCULATE ( [Order Count], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) )
+RETURN
+    IF (
+        ActualRevenue = ExpectedRevenue && ActualOrders = ExpectedOrders,
+        "OK - matches SQL baseline",
+        "MISMATCH: " & FORMAT ( ActualRevenue, "$#,0.00" ) & " / "
+            & FORMAT ( ActualOrders, "#,0" ) & " orders"
+    )

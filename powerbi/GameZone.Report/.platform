@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "GameZone"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9a3c2d51-4b6e-4f8c-8d92-3e7a6b5c8f21"
+  }
+}

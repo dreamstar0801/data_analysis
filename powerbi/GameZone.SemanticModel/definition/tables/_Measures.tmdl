@@ -1,0 +1,259 @@
+/// Measure-only table. Holds every measure in the model so they live in one
+/// place in the field list instead of scattered across the fact and dimension
+/// tables. The single column is hidden and never used.
+table _Measures
+	lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6001
+
+	measure 'Total Revenue' =
+			CALCULATE (
+			    SUM ( Orders[usd_price] ),
+			    Orders[is_revenue_eligible] = TRUE
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6101
+		description: Gross revenue. Excludes the 34 rows priced at $0 or null.
+
+	measure 'Order Count' =
+			CALCULATE (
+			    DISTINCTCOUNT ( Orders[order_id] ),
+			    Orders[is_revenue_eligible] = TRUE
+			)
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6102
+		description: Revenue-eligible orders. 21,685 across the full history.
+
+	measure Customers =
+			CALCULATE (
+			    DISTINCTCOUNT ( Orders[user_id] ),
+			    Orders[is_revenue_eligible] = TRUE
+			)
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6103
+
+	measure AOV = DIVIDE ( [Total Revenue], [Order Count] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6104
+		description: Average order value. $281.46 overall; ranges $187 (email) to $311 (affiliate).
+
+	measure 'Revenue per Customer' = DIVIDE ( [Total Revenue], [Customers] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6105
+
+	measure 'Refunded Orders' = CALCULATE ( [Order Count], Orders[is_refunded] = TRUE )
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6106
+
+	measure 'Refund Rate' = DIVIDE ( [Refunded Orders], [Order Count] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6107
+		description: Order-weighted refund rate. Roughly flat across channels (14.7%-17.8%), which is why refunds do not explain the channel mix.
+
+	measure 'Refunded Revenue' = CALCULATE ( [Total Revenue], Orders[is_refunded] = TRUE )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6108
+
+	measure 'Refund Rate by Value' = DIVIDE ( [Refunded Revenue], [Total Revenue] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6109
+
+	measure 'Net Revenue' = [Total Revenue] - [Refunded Revenue]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e610a
+
+	measure 'Revenue % of Total' =
+			DIVIDE (
+			    [Total Revenue],
+			    CALCULATE ( [Total Revenue], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e610b
+		description: Share of the whole business. Ignores slicers.
+
+	measure 'Revenue % of Visible Total' =
+			DIVIDE (
+			    [Total Revenue],
+			    CALCULATE ( [Total Revenue], ALLSELECTED () )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e610c
+		description: Share of what is currently on screen. Respects slicers.
+
+	measure 'Channel Share' =
+			DIVIDE (
+			    [Total Revenue],
+			    CALCULATE ( [Total Revenue], ALL ( Orders[marketing_channel] ) )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e610d
+
+	measure 'Region Share' =
+			DIVIDE (
+			    [Total Revenue],
+			    CALCULATE ( [Total Revenue], ALL ( Country[region] ) )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e610e
+
+	measure 'Revenue LY' = CALCULATE ( [Total Revenue], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e610f
+
+	measure 'Revenue YoY' = [Total Revenue] - [Revenue LY]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6110
+
+	measure 'Revenue YoY %' = DIVIDE ( [Total Revenue] - [Revenue LY], [Revenue LY] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6111
+
+	measure 'Channel Share LY' = CALCULATE ( [Channel Share], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6112
+
+	measure 'Channel Mix Shift (pp)' =
+			IF (
+			    NOT ISBLANK ( [Channel Share LY] ),
+			    ( [Channel Share] - [Channel Share LY] ) * 100
+			)
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6113
+		description: Year-over-year change in a channel's revenue share, in percentage points. Direct -4.2pp and email +6.1pp across 2019-2021.
+
+	measure 'Revenue YTD' = TOTALYTD ( [Total Revenue], 'Date'[Date] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6114
+
+	measure 'Region Revenue Rank' =
+			IF (
+			    HASONEVALUE ( Country[region] ),
+			    RANKX ( ALLSELECTED ( Country[region] ), [Total Revenue],, DESC, DENSE )
+			)
+		formatString: 0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6115
+
+	measure 'Channel Revenue Rank' =
+			IF (
+			    HASONEVALUE ( Orders[marketing_channel] ),
+			    RANKX ( ALLSELECTED ( Orders[marketing_channel] ), [Total Revenue],, DESC, DENSE )
+			)
+		formatString: 0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6116
+
+	measure 'Top Product' =
+			VAR TopRow =
+			    TOPN ( 1, VALUES ( Orders[product_name] ), [Total Revenue], DESC )
+			RETURN
+			    CONCATENATEX ( TopRow, Orders[product_name], ", " )
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6117
+
+	measure 'Top Product Revenue' = MAXX ( VALUES ( Orders[product_name] ), [Total Revenue] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6118
+
+	measure 'Avg Days to Ship' =
+			CALCULATE (
+			    AVERAGE ( Orders[days_to_ship] ),
+			    Orders[has_ship_before_purchase] = FALSE
+			)
+		formatString: #,0.0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6119
+		description: Excludes the ~2,000 orders whose ship date precedes their purchase date.
+
+	measure 'Median Days to Ship' =
+			CALCULATE (
+			    MEDIAN ( Orders[days_to_ship] ),
+			    Orders[has_ship_before_purchase] = FALSE
+			)
+		formatString: #,0.0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e611a
+
+	measure 'Total Rows' = COUNTROWS ( Orders )
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e611b
+
+	measure 'Orders Shipped Before Purchase' =
+			CALCULATE (
+			    COUNTROWS ( Orders ),
+			    Orders[has_ship_before_purchase] = TRUE
+			)
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e611c
+
+	measure '% Shipped Before Purchase' = DIVIDE ( [Orders Shipped Before Purchase], [Total Rows] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e611d
+
+	measure 'Excluded Zero-Price Orders' =
+			CALCULATE (
+			    COUNTROWS ( Orders ),
+			    Orders[is_revenue_eligible] = FALSE
+			)
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e611e
+
+	measure 'Orders Missing Purchase Date' =
+			CALCULATE (
+			    COUNTROWS ( Orders ),
+			    ISBLANK ( Orders[purchase_date] )
+			)
+		formatString: #,0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e611f
+
+	measure 'Unmapped Revenue' = CALCULATE ( [Total Revenue], Country[region] = "Unmapped" )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6120
+
+	measure 'Unmapped Revenue %' =
+			DIVIDE (
+			    [Unmapped Revenue],
+			    CALCULATE ( [Total Revenue], ALL ( Country ) )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6121
+
+	measure 'Revenue on Analyst-Patched Regions' = CALCULATE ( [Total Revenue], Country[region_source] = "analyst patch" )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6122
+
+	measure 'Revenue on Analyst-Patched Regions %' =
+			DIVIDE (
+			    [Revenue on Analyst-Patched Regions],
+			    CALCULATE ( [Total Revenue], ALL ( Country ) )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6123
+		description: How much of total revenue depends on the six-code region patch. If this is large, the patch is load-bearing and belongs in the caveats.
+
+	measure 'Model Check' =
+			VAR ExpectedRevenue = 6103484.09
+			VAR ExpectedOrders = 21685
+			VAR ActualRevenue =
+			    ROUND ( CALCULATE ( [Total Revenue], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) ), 2 )
+			VAR ActualOrders =
+			    CALCULATE ( [Order Count], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) )
+			RETURN
+			    IF (
+			        ActualRevenue = ExpectedRevenue && ActualOrders = ExpectedOrders,
+			        "OK - matches SQL baseline",
+			        "MISMATCH: " & FORMAT ( ActualRevenue, "$#,0.00" ) & " / " & FORMAT ( ActualOrders, "#,0" ) & " orders"
+			    )
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6124
+		description: Regression test on a card. Returns OK only while the model reproduces sql/gamezone_channel_region_analysis.sql exactly.
+
+	column _dummy
+		dataType: int64
+		isHidden
+		isNameInferred
+		formatString: 0
+		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6002
+		summarizeBy: none
+		sourceColumn: [_dummy]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW ( "_dummy", 1 )
+
+	annotation PBI_Id = 5da0cf43-7e64-45fb-8f38-b04d9c5e6001
+

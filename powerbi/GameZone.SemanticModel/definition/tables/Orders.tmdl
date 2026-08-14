@@ -1,0 +1,343 @@
+/// One row per order. 21,864 rows arrive from the source file; 145 duplicate
+/// order_ids are removed here, leaving 21,719. Rows with a $0 or null price are
+/// kept and flagged rather than dropped, so the data-quality measures can still
+/// see them.
+table Orders
+	lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3001
+
+	/// Business key. Unique after the de-duplication step.
+	column order_id
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3002
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column user_id
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3003
+		summarizeBy: none
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Parsed from three different source formats: ISO, MM-DD-YYYY with a time,
+	/// and MM-DD-YYYY carrying an impossible minute value ("13:62"), which falls
+	/// back to a date-only parse.
+	column purchase_datetime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3004
+		summarizeBy: none
+		sourceColumn: purchase_datetime
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Relationship key into the Date table.
+	column purchase_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3005
+		summarizeBy: none
+		sourceColumn: purchase_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column ship_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3006
+		summarizeBy: none
+		sourceColumn: ship_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column refund_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3007
+		summarizeBy: none
+		sourceColumn: refund_date
+
+		annotation SummarizationSetBy = Automatic
+
+	/// "27inches 4k gaming monitor" (61 rows) is collapsed into
+	/// "27in 4K gaming monitor" - one SKU, two spellings.
+	column product_name
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3008
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Blanks and nulls are mapped to "unknown" so they appear in a grouping
+	/// instead of disappearing from it.
+	column marketing_channel
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3009
+		summarizeBy: none
+		sourceColumn: marketing_channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_creation_method
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b300a
+		summarizeBy: none
+		sourceColumn: account_creation_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_platform
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b300b
+		summarizeBy: none
+		sourceColumn: purchase_platform
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Relationship key into the Country table.
+	column country_code
+		dataType: string
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b300c
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column usd_price
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b300d
+		summarizeBy: none
+		sourceColumn: usd_price
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	/// TRUE when refund_ts was populated in the source.
+	column is_refunded
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b300e
+		summarizeBy: none
+		sourceColumn: is_refunded
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Can be negative: roughly 9% of orders carry a ship date before the
+	/// purchase date, by up to 149 days.
+	column days_to_ship
+		dataType: int64
+		formatString: 0
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b300f
+		summarizeBy: none
+		sourceColumn: days_to_ship
+
+		annotation SummarizationSetBy = User
+
+	column has_ship_before_purchase
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3010
+		summarizeBy: none
+		sourceColumn: has_ship_before_purchase
+
+		annotation SummarizationSetBy = Automatic
+
+	/// FALSE for the 34 rows with a $0 or null price. Every revenue measure
+	/// filters on this flag, so the denominator is identical across the report.
+	column is_revenue_eligible
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2a7c9e10-4b31-42f8-9c05-8d1a6f2b3011
+		summarizeBy: none
+		sourceColumn: is_revenue_eligible
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Orders = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(RepoPath & "/data/orders.csv"),
+				        [Delimiter = ",", Columns = 12, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    // Everything is read as text so that malformed timestamps fail
+				    // loudly below instead of silently disappearing at load time.
+				    AsText = Table.TransformColumnTypes(
+				        Headers,
+				        List.Transform(Table.ColumnNames(Headers), each {_, type text})
+				    ),
+				    // 145 order_ids appear more than once. Buffer the sort so that
+				    // Table.Distinct is guaranteed to keep the earliest row.
+				    Sorted = Table.Buffer(
+				        Table.Sort(AsText, {{"purchase_ts", Order.Ascending}, {"user_id", Order.Ascending}})
+				    ),
+				    Deduped = Table.Distinct(Sorted, {"order_id"}),
+				    AddPurchase = Table.AddColumn(
+				        Deduped,
+				        "purchase_datetime",
+				        each
+				            let
+				                Raw = if [purchase_ts] = null then "" else Text.Trim([purchase_ts])
+				            in
+				                if Raw = "" then
+				                    null
+				                else
+				                    try DateTime.FromText(Raw, [Format = "yyyy-MM-dd HH:mm:ss", Culture = "en-US"])
+				                    otherwise try DateTime.FromText(Raw, [Format = "MM-dd-yyyy HH:mm:ss", Culture = "en-US"])
+				                    otherwise try DateTime.From(Date.FromText(Text.Start(Raw, 10), [Format = "MM-dd-yyyy", Culture = "en-US"]))
+				                    otherwise null,
+				        type nullable datetime
+				    ),
+				    AddShip = Table.AddColumn(
+				        AddPurchase,
+				        "ship_date",
+				        each
+				            let
+				                Raw = if [ship_ts] = null then "" else Text.Trim([ship_ts])
+				            in
+				                if Raw = "" then null else try Date.From(DateTime.FromText(Raw, [Format = "yyyy-MM-dd HH:mm:ss", Culture = "en-US"])) otherwise null,
+				        type nullable date
+				    ),
+				    AddRefund = Table.AddColumn(
+				        AddShip,
+				        "refund_date",
+				        each
+				            let
+				                Raw = if [refund_ts] = null then "" else Text.Trim([refund_ts])
+				            in
+				                if Raw = "" then null else try Date.From(DateTime.FromText(Raw, [Format = "yyyy-MM-dd HH:mm:ss", Culture = "en-US"])) otherwise null,
+				        type nullable date
+				    ),
+				    AddPurchaseDate = Table.AddColumn(
+				        AddRefund,
+				        "purchase_date",
+				        each if [purchase_datetime] = null then null else Date.From([purchase_datetime]),
+				        type nullable date
+				    ),
+				    // One SKU, two spellings.
+				    FixProduct = Table.AddColumn(
+				        AddPurchaseDate,
+				        "product_name_clean",
+				        each
+				            let
+				                Raw = if [product_name] = null then "" else Text.Trim([product_name])
+				            in
+				                if Text.Lower(Raw) = "27inches 4k gaming monitor" then "27in 4K gaming monitor" else Raw,
+				        type text
+				    ),
+				    FixChannel = Table.AddColumn(
+				        FixProduct,
+				        "marketing_channel_clean",
+				        each
+				            let
+				                Raw = if [marketing_channel] = null then "" else Text.Lower(Text.Trim([marketing_channel]))
+				            in
+				                if Raw = "" then "unknown" else Raw,
+				        type text
+				    ),
+				    FixAccount = Table.AddColumn(
+				        FixChannel,
+				        "account_creation_method_clean",
+				        each
+				            let
+				                Raw = if [account_creation_method] = null then "" else Text.Lower(Text.Trim([account_creation_method]))
+				            in
+				                if Raw = "" then "unknown" else Raw,
+				        type text
+				    ),
+				    FixPlatform = Table.AddColumn(
+				        FixAccount,
+				        "purchase_platform_clean",
+				        each if [purchase_platform] = null then "unknown" else Text.Lower(Text.Trim([purchase_platform])),
+				        type text
+				    ),
+				    FixCountry = Table.AddColumn(
+				        FixPlatform,
+				        "country_code_clean",
+				        each if [country_code] = null then "" else Text.Upper(Text.Trim([country_code])),
+				        type text
+				    ),
+				    AddPrice = Table.AddColumn(
+				        FixCountry,
+				        "usd_price_num",
+				        each try Number.FromText(Text.Trim([usd_price])) otherwise null,
+				        type nullable number
+				    ),
+				    AddFlags = Table.AddColumn(AddPrice, "is_refunded", each [refund_date] <> null, type logical),
+				    AddEligible = Table.AddColumn(
+				        AddFlags,
+				        "is_revenue_eligible",
+				        each [usd_price_num] <> null and [usd_price_num] > 0,
+				        type logical
+				    ),
+				    AddLag = Table.AddColumn(
+				        AddEligible,
+				        "days_to_ship",
+				        each
+				            if [ship_date] = null or [purchase_date] = null then
+				                null
+				            else
+				                Duration.Days([ship_date] - [purchase_date]),
+				        type nullable number
+				    ),
+				    AddBadShip = Table.AddColumn(
+				        AddLag,
+				        "has_ship_before_purchase",
+				        each [days_to_ship] <> null and [days_to_ship] < 0,
+				        type logical
+				    ),
+				    Selected = Table.SelectColumns(
+				        AddBadShip,
+				        {
+				            "order_id", "user_id", "purchase_datetime", "purchase_date", "ship_date",
+				            "refund_date", "product_name_clean", "marketing_channel_clean",
+				            "account_creation_method_clean", "purchase_platform_clean",
+				            "country_code_clean", "usd_price_num", "is_refunded", "days_to_ship",
+				            "has_ship_before_purchase", "is_revenue_eligible"
+				        }
+				    ),
+				    Renamed = Table.RenameColumns(
+				        Selected,
+				        {
+				            {"product_name_clean", "product_name"},
+				            {"marketing_channel_clean", "marketing_channel"},
+				            {"account_creation_method_clean", "account_creation_method"},
+				            {"purchase_platform_clean", "purchase_platform"},
+				            {"country_code_clean", "country_code"},
+				            {"usd_price_num", "usd_price"}
+				        }
+				    ),
+				    Typed = Table.TransformColumnTypes(
+				        Renamed,
+				        {
+				            {"order_id", type text},
+				            {"user_id", type text},
+				            {"purchase_datetime", type datetime},
+				            {"purchase_date", type date},
+				            {"ship_date", type date},
+				            {"refund_date", type date},
+				            {"product_name", type text},
+				            {"marketing_channel", type text},
+				            {"account_creation_method", type text},
+				            {"purchase_platform", type text},
+				            {"country_code", type text},
+				            {"usd_price", type number},
+				            {"is_refunded", type logical},
+				            {"days_to_ship", Int64.Type},
+				            {"has_ship_before_purchase", type logical},
+				            {"is_revenue_eligible", type logical}
+				        }
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

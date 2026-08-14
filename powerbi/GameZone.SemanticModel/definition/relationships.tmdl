@@ -1,0 +1,13 @@
+/// Orders to the calendar. purchase_date is nullable (one row has a blank
+/// purchase_ts in the source), so that row lands on the blank member rather
+/// than breaking the refresh.
+relationship 7ea1df54-8f75-46fc-9049-c15eab6f7001
+	fromColumn: Orders.purchase_date
+	toColumn: 'Date'.Date
+
+/// Orders to the country dimension. Country is built from the union of the
+/// lookup and the codes present in Orders, so this side is complete.
+relationship 7ea1df54-8f75-46fc-9049-c15eab6f7002
+	fromColumn: Orders.country_code
+	toColumn: Country.country_code
+

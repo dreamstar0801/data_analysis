@@ -1,0 +1,13 @@
+/// Absolute path to the root of the cloned E_commerce_DA repository, with no
+/// trailing slash. Set this once after cloning (Home > Transform data >
+/// Manage parameters) and every query in the model repoints itself.
+/// Example on macOS/Linux: /Users/you/code/E_commerce_DA
+/// Example on Windows:     C:\code\E_commerce_DA
+expression RepoPath = "C:\repos\E_commerce_DA" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 6b1f0a41-1d2c-4a55-9f10-0a3f7d4c1101
+	queryGroup: Parameters
+
+	annotation PBI_ResultType = Text
+
+	annotation PBI_NavigationStepName = Navigation
+

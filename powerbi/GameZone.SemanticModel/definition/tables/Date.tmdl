@@ -1,0 +1,95 @@
+/// Contiguous date table covering the full order history (Jan 2019 - Dec 2021).
+/// Marked as the model's date table so SAMEPERIODLASTYEAR and TOTALYTD have a
+/// gapless calendar to walk. Built in DAX rather than Power Query so it has no
+/// dependency on the source files.
+table 'Date'
+	lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5001
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		isNameInferred
+		formatString: Short Date
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5002
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		isNameInferred
+		formatString: 0
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5003
+		summarizeBy: none
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = User
+
+	column Quarter
+		dataType: string
+		isNameInferred
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5004
+		summarizeBy: none
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		dataType: int64
+		isNameInferred
+		isHidden
+		formatString: 0
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5005
+		summarizeBy: none
+		sourceColumn: [MonthNumber]
+
+		annotation SummarizationSetBy = User
+
+	column Month
+		dataType: string
+		isNameInferred
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5006
+		summarizeBy: none
+		sourceColumn: [Month]
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthSort
+		dataType: int64
+		isNameInferred
+		isHidden
+		formatString: 0
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5007
+		summarizeBy: none
+		sourceColumn: [YearMonthSort]
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Month'
+		dataType: string
+		isNameInferred
+		lineageTag: 4c9ebf32-6d53-44fa-9e27-af3c8b4d5008
+		summarizeBy: none
+		sourceColumn: [Year Month]
+		sortByColumn: YearMonthSort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Date' = calculated
+		mode: import
+		source =
+				ADDCOLUMNS (
+				    CALENDAR ( DATE ( 2019, 1, 1 ), DATE ( 2021, 12, 31 ) ),
+				    "Year", YEAR ( [Date] ),
+				    "Quarter", "Q" & FORMAT ( [Date], "Q" ),
+				    "MonthNumber", MONTH ( [Date] ),
+				    "Month", FORMAT ( [Date], "mmm" ),
+				    "YearMonthSort", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+				    "Year Month", FORMAT ( [Date], "yyyy-mm" )
+				)
+
+	annotation PBI_Id = 4c9ebf32-6d53-44fa-9e27-af3c8b4d5001
+

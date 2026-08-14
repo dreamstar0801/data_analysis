@@ -1,0 +1,145 @@
+/// Country dimension, built from the union of the source region lookup, the
+/// analyst patch, and every country code actually present in Orders - so no
+/// order can fall out of the model for want of a dimension row.
+///
+/// The source lookup has NO region value for the United States, and its value
+/// for Canada ("North America") is not one of the four canonical regions. Left
+/// alone that sends ~52% of revenue into an Unmapped bucket and makes EMEA
+/// appear to be the largest region, which is wrong. Six codes are patched to
+/// NAMER on geography alone and labelled as such in region_source, so the
+/// judgement call stays visible in the model rather than hiding in a formula.
+table Country
+	lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4001
+
+	column country_code
+		dataType: string
+		lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4002
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	/// One of NAMER, EMEA, APAC, LATAM, Unmapped.
+	column region
+		dataType: string
+		lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4003
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	/// "source lookup", "analyst patch", or "unmapped". Slice any regional
+	/// figure by this to see how much of it rests on the patch.
+	column region_source
+		dataType: string
+		lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4004
+		summarizeBy: none
+		sourceColumn: region_source
+
+		annotation SummarizationSetBy = Automatic
+
+	/// TRUE for "AP" and "EU", which are not valid ISO 3166-1 alpha-2 codes and
+	/// appear in neither the lookup nor any standard.
+	column is_valid_iso_code
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4005
+		summarizeBy: none
+		sourceColumn: is_valid_iso_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Country = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(RepoPath & "/data/region_lookup.csv"),
+				        [Delimiter = ",", Columns = 2, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    LookupNormalised = Table.AddColumn(
+				        Headers,
+				        "lookup_region",
+				        each
+				            let
+				                Raw = if [region] = null then "" else Text.Upper(Text.Trim([region]))
+				            in
+				                if List.Contains({"EMEA", "APAC", "LATAM"}, Raw) then
+				                    Raw
+				                else if Raw = "NORTH AMERICA" then
+				                    "NAMER"
+				                else
+				                    null,
+				        type nullable text
+				    ),
+				    LookupCoded = Table.AddColumn(
+				        LookupNormalised,
+				        "code",
+				        each if [country_code] = null then "" else Text.Upper(Text.Trim([country_code])),
+				        type text
+				    ),
+				    LookupResolved = Table.SelectRows(LookupCoded, each [lookup_region] <> null and [code] <> ""),
+				    LookupMap = Record.FromList(LookupResolved[lookup_region], LookupResolved[code]),
+				    // The six analyst patches. Kept as data, not buried in a condition.
+				    Patch = #table(
+				        type table [code = text, region = text],
+				        {
+				            {"US", "NAMER"}, {"CA", "NAMER"}, {"PR", "NAMER"},
+				            {"VI", "NAMER"}, {"BM", "NAMER"}, {"GL", "NAMER"}
+				        }
+				    ),
+				    PatchMap = Record.FromList(Patch[region], Patch[code]),
+				    AllCodes = List.Sort(
+				        List.Distinct(
+				            List.RemoveNulls(
+				                List.Combine({LookupCoded[code], Table.Column(Orders, "country_code"), Patch[code]})
+				            )
+				        )
+				    ),
+				    CodesOnly = List.Select(AllCodes, each _ <> ""),
+				    AsTable = Table.FromList(CodesOnly, Splitter.SplitByNothing(), {"country_code"}),
+				    AddRegion = Table.AddColumn(
+				        AsTable,
+				        "region",
+				        each
+				            if Record.HasFields(PatchMap, [country_code]) then
+				                Record.Field(PatchMap, [country_code])
+				            else if Record.HasFields(LookupMap, [country_code]) then
+				                Record.Field(LookupMap, [country_code])
+				            else
+				                "Unmapped",
+				        type text
+				    ),
+				    AddSource = Table.AddColumn(
+				        AddRegion,
+				        "region_source",
+				        each
+				            if Record.HasFields(PatchMap, [country_code]) then
+				                "analyst patch"
+				            else if Record.HasFields(LookupMap, [country_code]) then
+				                "source lookup"
+				            else
+				                "unmapped",
+				        type text
+				    ),
+				    AddIso = Table.AddColumn(
+				        AddSource,
+				        "is_valid_iso_code",
+				        each not List.Contains({"AP", "EU"}, [country_code]),
+				        type logical
+				    ),
+				    Typed = Table.TransformColumnTypes(
+				        AddIso,
+				        {
+				            {"country_code", type text},
+				            {"region", type text},
+				            {"region_source", type text},
+				            {"is_valid_iso_code", type logical}
+				        }
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

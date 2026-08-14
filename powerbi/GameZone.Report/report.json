@@ -1,0 +1,389 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/1.0.0/schema.json",
+  "config": "{\"version\": \"5.43\", \"activeSectionIndex\": 0, \"defaultDrillFilterOtherVisuals\": true, \"settings\": {\"useStylableVisualContainerHeader\": true, \"exportDataMode\": 1, \"useNewFilterPaneExperience\": true, \"allowChangeFilterTypes\": true, \"useEnhancedTooltips\": true}}",
+  "layoutOptimization": 0,
+  "resourcePackages": [],
+  "sections": [
+    {
+      "name": "ReportSectionExec01",
+      "displayName": "Executive summary",
+      "filters": "[]",
+      "ordinal": 0,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 16,
+          "z": 0,
+          "width": 700,
+          "height": 34,
+          "config": "{\"name\": \"aa4c9cab-484b-4a2d-aac0-0718724cd7f2\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 16, \"z\": 0, \"width\": 700, \"height\": 34}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"GameZone \\u2014 executive summary\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\", \"color\": \"#1B2A3D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 48,
+          "z": 0,
+          "width": 700,
+          "height": 26,
+          "config": "{\"name\": \"1fc08a7d-8149-4e24-ae40-f03c3f6eae91\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 48, \"z\": 0, \"width\": 700, \"height\": 26}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"21,685 revenue-eligible orders, Jan 2019 \\u2013 Dec 2021. Figures reconcile to sql/gamezone_channel_region_analysis.sql.\", \"textStyle\": {\"fontSize\": \"10pt\", \"fontWeight\": \"normal\", \"color\": \"#5A6B7D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 1040,
+          "y": 16,
+          "z": 0,
+          "width": 220,
+          "height": 120,
+          "config": "{\"name\": \"62242495-49f9-4fa4-bf79-6aace50ff6e4\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 1040, \"y\": 16, \"z\": 0, \"width\": 220, \"height\": 120}}], \"singleVisual\": {\"visualType\": \"slicer\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"Date.Year\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"Date\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"Year\"}, \"Name\": \"Date.Year\", \"NativeReferenceName\": \"Year\"}]}, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Basic'\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Year'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 150,
+          "z": 0,
+          "width": 245,
+          "height": 110,
+          "config": "{\"name\": \"a69a2b95-a2eb-48a6-9fe0-2285d7b4ffcf\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 150, \"z\": 0, \"width\": 245, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Total revenue'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 275,
+          "y": 150,
+          "z": 0,
+          "width": 245,
+          "height": 110,
+          "config": "{\"name\": \"f84c3d47-897a-4c9d-8a91-433707715983\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 275, \"y\": 150, \"z\": 0, \"width\": 245, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Order Count\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Order Count\"}, \"Name\": \"_Measures.Order Count\", \"NativeReferenceName\": \"Order Count\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Orders'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 530,
+          "y": 150,
+          "z": 0,
+          "width": 245,
+          "height": 110,
+          "config": "{\"name\": \"c648941a-4c59-4f7e-a086-3189e6d4fc4f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 530, \"y\": 150, \"z\": 0, \"width\": 245, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.AOV\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"AOV\"}, \"Name\": \"_Measures.AOV\", \"NativeReferenceName\": \"AOV\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Average order value'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 785,
+          "y": 150,
+          "z": 0,
+          "width": 245,
+          "height": 110,
+          "config": "{\"name\": \"dae9f614-756c-42ca-a78f-c49f25b2d36c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 785, \"y\": 150, \"z\": 0, \"width\": 245, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Refund Rate\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refund Rate\"}, \"Name\": \"_Measures.Refund Rate\", \"NativeReferenceName\": \"Refund Rate\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Refund rate'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 275,
+          "z": 0,
+          "width": 620,
+          "height": 210,
+          "config": "{\"name\": \"82c5a96c-b7e8-4cfe-b3fa-d62432b7425b\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 275, \"z\": 0, \"width\": 620, \"height\": 210}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Date.Year Month\"}], \"Y\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"Date\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"Year Month\"}, \"Name\": \"Date.Year Month\", \"NativeReferenceName\": \"Year Month\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue by month'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 275,
+          "z": 0,
+          "width": 600,
+          "height": 210,
+          "config": "{\"name\": \"7d36058d-38aa-4c72-8e89-7039300544a7\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 275, \"z\": 0, \"width\": 600, \"height\": 210}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Country.region\"}], \"Y\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"Country\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"region\"}, \"Name\": \"Country.region\", \"NativeReferenceName\": \"region\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}}}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue by region'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 495,
+          "z": 0,
+          "width": 620,
+          "height": 205,
+          "config": "{\"name\": \"992b43f0-2aa0-413a-b5ae-206160874161\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 495, \"z\": 0, \"width\": 620, \"height\": 205}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Orders.marketing_channel\"}], \"Y\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"marketing_channel\"}, \"Name\": \"Orders.marketing_channel\", \"NativeReferenceName\": \"marketing_channel\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}}}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue by marketing channel'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 495,
+          "z": 0,
+          "width": 600,
+          "height": 205,
+          "config": "{\"name\": \"a1fe47d8-e584-443f-bbc6-ecf1fe7e300f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 495, \"z\": 0, \"width\": 600, \"height\": 205}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Rows\": [{\"queryRef\": \"Orders.marketing_channel\"}], \"Values\": [{\"queryRef\": \"_Measures.Total Revenue\"}, {\"queryRef\": \"_Measures.Revenue % of Total\"}, {\"queryRef\": \"_Measures.AOV\"}, {\"queryRef\": \"_Measures.Refund Rate\"}, {\"queryRef\": \"_Measures.Revenue YoY %\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"marketing_channel\"}, \"Name\": \"Orders.marketing_channel\", \"NativeReferenceName\": \"marketing_channel\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue % of Total\"}, \"Name\": \"_Measures.Revenue % of Total\", \"NativeReferenceName\": \"Revenue % of Total\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"AOV\"}, \"Name\": \"_Measures.AOV\", \"NativeReferenceName\": \"AOV\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refund Rate\"}, \"Name\": \"_Measures.Refund Rate\", \"NativeReferenceName\": \"Refund Rate\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue YoY %\"}, \"Name\": \"_Measures.Revenue YoY %\", \"NativeReferenceName\": \"Revenue YoY %\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Channel scorecard'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{\"visibility\": 0}",
+      "displayOption": 1,
+      "height": 720.0,
+      "width": 1280.0
+    },
+    {
+      "name": "ReportSectionChan02",
+      "displayName": "Channel",
+      "filters": "[]",
+      "ordinal": 1,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 16,
+          "z": 0,
+          "width": 900,
+          "height": 34,
+          "config": "{\"name\": \"db5c6554-aa1b-4fdf-9604-105e5d8857c0\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 16, \"z\": 0, \"width\": 900, \"height\": 34}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Marketing channel deep dive\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\", \"color\": \"#1B2A3D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 48,
+          "z": 0,
+          "width": 900,
+          "height": 40,
+          "config": "{\"name\": \"372e7456-cd62-440f-a7ca-b4e3fa6263a6\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 48, \"z\": 0, \"width\": 900, \"height\": 40}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"This is a direct-traffic business: direct carries 84.7% of revenue. The movement worth watching is email, which grew from 8.2% to 14.3% of revenue while direct fell 4.2 points.\", \"textStyle\": {\"fontSize\": \"10pt\", \"fontWeight\": \"normal\", \"color\": \"#5A6B7D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 100,
+          "z": 0,
+          "width": 620,
+          "height": 280,
+          "config": "{\"name\": \"2f8f760e-937c-4f35-835e-01b1a9173e0c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 100, \"z\": 0, \"width\": 620, \"height\": 280}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Rows\": [{\"queryRef\": \"Orders.marketing_channel\"}], \"Values\": [{\"queryRef\": \"_Measures.Total Revenue\"}, {\"queryRef\": \"_Measures.Revenue LY\"}, {\"queryRef\": \"_Measures.Revenue YoY\"}, {\"queryRef\": \"_Measures.Revenue YoY %\"}, {\"queryRef\": \"_Measures.Order Count\"}, {\"queryRef\": \"_Measures.AOV\"}, {\"queryRef\": \"_Measures.Refund Rate\"}, {\"queryRef\": \"_Measures.Channel Share\"}, {\"queryRef\": \"_Measures.Channel Revenue Rank\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"marketing_channel\"}, \"Name\": \"Orders.marketing_channel\", \"NativeReferenceName\": \"marketing_channel\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue LY\"}, \"Name\": \"_Measures.Revenue LY\", \"NativeReferenceName\": \"Revenue LY\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue YoY\"}, \"Name\": \"_Measures.Revenue YoY\", \"NativeReferenceName\": \"Revenue YoY\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue YoY %\"}, \"Name\": \"_Measures.Revenue YoY %\", \"NativeReferenceName\": \"Revenue YoY %\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Order Count\"}, \"Name\": \"_Measures.Order Count\", \"NativeReferenceName\": \"Order Count\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"AOV\"}, \"Name\": \"_Measures.AOV\", \"NativeReferenceName\": \"AOV\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refund Rate\"}, \"Name\": \"_Measures.Refund Rate\", \"NativeReferenceName\": \"Refund Rate\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Channel Share\"}, \"Name\": \"_Measures.Channel Share\", \"NativeReferenceName\": \"Channel Share\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Channel Revenue Rank\"}, \"Name\": \"_Measures.Channel Revenue Rank\", \"NativeReferenceName\": \"Channel Revenue Rank\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Channel scorecard'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 100,
+          "z": 0,
+          "width": 600,
+          "height": 280,
+          "config": "{\"name\": \"724e7cbc-d599-43f4-b30a-f64b484b3d24\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 100, \"z\": 0, \"width\": 600, \"height\": 280}}], \"singleVisual\": {\"visualType\": \"columnChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Date.Year\"}], \"Series\": [{\"queryRef\": \"Orders.marketing_channel\"}], \"Y\": [{\"queryRef\": \"_Measures.Channel Share\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"Date\", \"Type\": 0}, {\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"Year\"}, \"Name\": \"Date.Year\", \"NativeReferenceName\": \"Year\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"marketing_channel\"}, \"Name\": \"Orders.marketing_channel\", \"NativeReferenceName\": \"marketing_channel\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Channel Share\"}, \"Name\": \"_Measures.Channel Share\", \"NativeReferenceName\": \"Channel Share\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue share by channel and year'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 395,
+          "z": 0,
+          "width": 620,
+          "height": 305,
+          "config": "{\"name\": \"e8f88602-5eeb-40bd-8274-b5f8148b385e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 395, \"z\": 0, \"width\": 620, \"height\": 305}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Date.Year Month\"}], \"Series\": [{\"queryRef\": \"Orders.marketing_channel\"}], \"Y\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"Date\", \"Type\": 0}, {\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"Year Month\"}, \"Name\": \"Date.Year Month\", \"NativeReferenceName\": \"Year Month\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"marketing_channel\"}, \"Name\": \"Orders.marketing_channel\", \"NativeReferenceName\": \"marketing_channel\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Monthly revenue by channel'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 395,
+          "z": 0,
+          "width": 600,
+          "height": 305,
+          "config": "{\"name\": \"36e85d9f-569e-4150-9aff-0fe47cba687b\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 395, \"z\": 0, \"width\": 600, \"height\": 305}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Rows\": [{\"queryRef\": \"Orders.marketing_channel\"}], \"Columns\": [{\"queryRef\": \"Date.Year\"}], \"Values\": [{\"queryRef\": \"_Measures.Channel Share\"}, {\"queryRef\": \"_Measures.Channel Share LY\"}, {\"queryRef\": \"_Measures.Channel Mix Shift (pp)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"d\", \"Entity\": \"Date\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"marketing_channel\"}, \"Name\": \"Orders.marketing_channel\", \"NativeReferenceName\": \"marketing_channel\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"Year\"}, \"Name\": \"Date.Year\", \"NativeReferenceName\": \"Year\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Channel Share\"}, \"Name\": \"_Measures.Channel Share\", \"NativeReferenceName\": \"Channel Share\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Channel Share LY\"}, \"Name\": \"_Measures.Channel Share LY\", \"NativeReferenceName\": \"Channel Share LY\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Channel Mix Shift (pp)\"}, \"Name\": \"_Measures.Channel Mix Shift (pp)\", \"NativeReferenceName\": \"Channel Mix Shift (pp)\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Year-over-year mix shift, percentage points'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{\"visibility\": 0}",
+      "displayOption": 1,
+      "height": 720.0,
+      "width": 1280.0
+    },
+    {
+      "name": "ReportSectionRegn03",
+      "displayName": "Region and product",
+      "filters": "[]",
+      "ordinal": 2,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 16,
+          "z": 0,
+          "width": 900,
+          "height": 34,
+          "config": "{\"name\": \"79b6dcdd-42ef-4bd0-91a5-2eb8c3584a9b\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 16, \"z\": 0, \"width\": 900, \"height\": 34}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Region and product\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\", \"color\": \"#1B2A3D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 48,
+          "z": 0,
+          "width": 900,
+          "height": 40,
+          "config": "{\"name\": \"f06f4b8c-ed98-4b75-8a03-4bdbc038875e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 48, \"z\": 0, \"width\": 900, \"height\": 40}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"NAMER is the largest region at 52.1% of revenue \\u2014 but only after patching six country codes the source lookup leaves blank. The two cards on the right quantify how much of the regional view rests on that patch.\", \"textStyle\": {\"fontSize\": \"10pt\", \"fontWeight\": \"normal\", \"color\": \"#5A6B7D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 100,
+          "z": 0,
+          "width": 620,
+          "height": 250,
+          "config": "{\"name\": \"ecb2fdde-5ab4-4e96-aac8-cec8514dfbb9\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 100, \"z\": 0, \"width\": 620, \"height\": 250}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Rows\": [{\"queryRef\": \"Country.region\"}], \"Values\": [{\"queryRef\": \"_Measures.Total Revenue\"}, {\"queryRef\": \"_Measures.Net Revenue\"}, {\"queryRef\": \"_Measures.Order Count\"}, {\"queryRef\": \"_Measures.Customers\"}, {\"queryRef\": \"_Measures.Revenue per Customer\"}, {\"queryRef\": \"_Measures.Region Share\"}, {\"queryRef\": \"_Measures.Refund Rate by Value\"}, {\"queryRef\": \"_Measures.Region Revenue Rank\"}, {\"queryRef\": \"_Measures.Top Product\"}, {\"queryRef\": \"_Measures.Top Product Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"Country\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"region\"}, \"Name\": \"Country.region\", \"NativeReferenceName\": \"region\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Net Revenue\"}, \"Name\": \"_Measures.Net Revenue\", \"NativeReferenceName\": \"Net Revenue\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Order Count\"}, \"Name\": \"_Measures.Order Count\", \"NativeReferenceName\": \"Order Count\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Customers\"}, \"Name\": \"_Measures.Customers\", \"NativeReferenceName\": \"Customers\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue per Customer\"}, \"Name\": \"_Measures.Revenue per Customer\", \"NativeReferenceName\": \"Revenue per Customer\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Region Share\"}, \"Name\": \"_Measures.Region Share\", \"NativeReferenceName\": \"Region Share\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refund Rate by Value\"}, \"Name\": \"_Measures.Refund Rate by Value\", \"NativeReferenceName\": \"Refund Rate by Value\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Region Revenue Rank\"}, \"Name\": \"_Measures.Region Revenue Rank\", \"NativeReferenceName\": \"Region Revenue Rank\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Top Product\"}, \"Name\": \"_Measures.Top Product\", \"NativeReferenceName\": \"Top Product\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Top Product Revenue\"}, \"Name\": \"_Measures.Top Product Revenue\", \"NativeReferenceName\": \"Top Product Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Region scorecard'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 100,
+          "z": 0,
+          "width": 290,
+          "height": 120,
+          "config": "{\"name\": \"7362bc7d-2f7e-4f1a-be93-2099854df146\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 100, \"z\": 0, \"width\": 290, \"height\": 120}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Unmapped Revenue %\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Unmapped Revenue %\"}, \"Name\": \"_Measures.Unmapped Revenue %\", \"NativeReferenceName\": \"Unmapped Revenue %\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue with no region'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 970,
+          "y": 100,
+          "z": 0,
+          "width": 290,
+          "height": 120,
+          "config": "{\"name\": \"53e14a93-8da7-4906-82ed-faddfe5bb770\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 970, \"y\": 100, \"z\": 0, \"width\": 290, \"height\": 120}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Revenue on Analyst-Patched Regions %\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue on Analyst-Patched Regions %\"}, \"Name\": \"_Measures.Revenue on Analyst-Patched Regions %\", \"NativeReferenceName\": \"Revenue on Analyst-Patched Regions %\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue resting on the patch'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 230,
+          "z": 0,
+          "width": 600,
+          "height": 120,
+          "config": "{\"name\": \"7a9232e5-17bc-43b8-b19b-f9aff33b0397\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 230, \"z\": 0, \"width\": 600, \"height\": 120}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Country.region_source\"}], \"Y\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"Country\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"region_source\"}, \"Name\": \"Country.region_source\", \"NativeReferenceName\": \"region_source\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}}}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue by how the region was assigned'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 365,
+          "z": 0,
+          "width": 620,
+          "height": 335,
+          "config": "{\"name\": \"33609576-5f99-45f5-b731-1af1a7d25bd6\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 365, \"z\": 0, \"width\": 620, \"height\": 335}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Category\": [{\"queryRef\": \"Orders.product_name\"}], \"Y\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"product_name\"}, \"Name\": \"Orders.product_name\", \"NativeReferenceName\": \"product_name\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}}}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue by product'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 365,
+          "z": 0,
+          "width": 600,
+          "height": 335,
+          "config": "{\"name\": \"b17ba55f-8c33-4cb1-ab4f-f9077d553850\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 365, \"z\": 0, \"width\": 600, \"height\": 335}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Rows\": [{\"queryRef\": \"Orders.product_name\"}], \"Columns\": [{\"queryRef\": \"Country.region\"}], \"Values\": [{\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"c\", \"Entity\": \"Country\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"product_name\"}, \"Name\": \"Orders.product_name\", \"NativeReferenceName\": \"product_name\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"region\"}, \"Name\": \"Country.region\", \"NativeReferenceName\": \"region\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Product by region'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{\"visibility\": 0}",
+      "displayOption": 1,
+      "height": 720.0,
+      "width": 1280.0
+    },
+    {
+      "name": "ReportSectionQual04",
+      "displayName": "Data quality",
+      "filters": "[]",
+      "ordinal": 3,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 16,
+          "z": 0,
+          "width": 900,
+          "height": 34,
+          "config": "{\"name\": \"ee272364-647f-4925-bb3c-51bf0c118abf\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 16, \"z\": 0, \"width\": 900, \"height\": 34}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Data quality\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\", \"color\": \"#1B2A3D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 48,
+          "z": 0,
+          "width": 1000,
+          "height": 44,
+          "config": "{\"name\": \"62aecd63-8cf0-4703-8407-72062197a32c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 48, \"z\": 0, \"width\": 1000, \"height\": 44}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Known defects are reported as live measures rather than buried in a footnote. The Model Check card is a regression test: it returns OK only while the model still reproduces the SQL baseline exactly.\", \"textStyle\": {\"fontSize\": \"10pt\", \"fontWeight\": \"normal\", \"color\": \"#5A6B7D\"}}]}]}}]}, \"vcObjects\": {}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 105,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"63cb845e-8e54-4d7d-89df-1687a7dc7e73\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 105, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Total Rows\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Rows\"}, \"Name\": \"_Measures.Total Rows\", \"NativeReferenceName\": \"Total Rows\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rows after de-duplication'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 270,
+          "y": 105,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"e3249660-3c44-4f22-a89f-1eb59ec89956\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 270, \"y\": 105, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Excluded Zero-Price Orders\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Excluded Zero-Price Orders\"}, \"Name\": \"_Measures.Excluded Zero-Price Orders\", \"NativeReferenceName\": \"Excluded Zero-Price Orders\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Excluded: $0 or null price'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 520,
+          "y": 105,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"982c02fb-4742-4e49-90cd-5aaecd8aee25\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 520, \"y\": 105, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Orders Shipped Before Purchase\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Orders Shipped Before Purchase\"}, \"Name\": \"_Measures.Orders Shipped Before Purchase\", \"NativeReferenceName\": \"Orders Shipped Before Purchase\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Ship date precedes purchase'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 770,
+          "y": 105,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"092f7e62-7844-4a42-83e9-21fa535938fe\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 770, \"y\": 105, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.% Shipped Before Purchase\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"% Shipped Before Purchase\"}, \"Name\": \"_Measures.% Shipped Before Purchase\", \"NativeReferenceName\": \"% Shipped Before Purchase\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Share of rows affected'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 1020,
+          "y": 105,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"ab6bf5d8-94e7-4538-b85e-9a6aaed27330\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 1020, \"y\": 105, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Orders Missing Purchase Date\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Orders Missing Purchase Date\"}, \"Name\": \"_Measures.Orders Missing Purchase Date\", \"NativeReferenceName\": \"Orders Missing Purchase Date\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'No parseable purchase date'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 230,
+          "z": 0,
+          "width": 195,
+          "height": 110,
+          "config": "{\"name\": \"11705283-a962-42cf-885b-9891f4a1a111\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 230, \"z\": 0, \"width\": 195, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Unmapped Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Unmapped Revenue\"}, \"Name\": \"_Measures.Unmapped Revenue\", \"NativeReferenceName\": \"Unmapped Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue with no region'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 225,
+          "y": 230,
+          "z": 0,
+          "width": 195,
+          "height": 110,
+          "config": "{\"name\": \"3e063849-e21d-46f5-9466-f8bfa54a0646\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 225, \"y\": 230, \"z\": 0, \"width\": 195, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Revenue on Analyst-Patched Regions\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Revenue on Analyst-Patched Regions\"}, \"Name\": \"_Measures.Revenue on Analyst-Patched Regions\", \"NativeReferenceName\": \"Revenue on Analyst-Patched Regions\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue resting on the patch'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 440,
+          "y": 230,
+          "z": 0,
+          "width": 820,
+          "height": 110,
+          "config": "{\"name\": \"bd07bb7c-bb1a-41d1-afd8-4a8d8365c49c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 440, \"y\": 230, \"z\": 0, \"width\": 820, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Model Check\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Model Check\"}, \"Name\": \"_Measures.Model Check\", \"NativeReferenceName\": \"Model Check\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Model check versus SQL baseline'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 355,
+          "z": 0,
+          "width": 620,
+          "height": 345,
+          "config": "{\"name\": \"e4f72397-e711-4c3f-bfbe-cb93e0547987\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 355, \"z\": 0, \"width\": 620, \"height\": 345}}], \"singleVisual\": {\"visualType\": \"tableEx\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Values\": [{\"queryRef\": \"Country.country_code\"}, {\"queryRef\": \"Country.region\"}, {\"queryRef\": \"Country.region_source\"}, {\"queryRef\": \"_Measures.Total Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"Country\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"country_code\"}, \"Name\": \"Country.country_code\", \"NativeReferenceName\": \"country_code\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"region\"}, \"Name\": \"Country.region\", \"NativeReferenceName\": \"region\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"region_source\"}, \"Name\": \"Country.region_source\", \"NativeReferenceName\": \"region_source\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"_Measures.Total Revenue\", \"NativeReferenceName\": \"Total Revenue\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Total Revenue\"}}}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Country to region resolution'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 660,
+          "y": 355,
+          "z": 0,
+          "width": 600,
+          "height": 345,
+          "config": "{\"name\": \"c7f46a99-94f1-4775-b0e5-a03d90e11f6d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 660, \"y\": 355, \"z\": 0, \"width\": 600, \"height\": 345}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"projections\": {\"Rows\": [{\"queryRef\": \"Orders.product_name\"}], \"Values\": [{\"queryRef\": \"_Measures.Order Count\"}, {\"queryRef\": \"_Measures.Avg Days to Ship\"}, {\"queryRef\": \"_Measures.Median Days to Ship\"}, {\"queryRef\": \"_Measures.Refunded Orders\"}, {\"queryRef\": \"_Measures.Refund Rate\"}, {\"queryRef\": \"_Measures.Refunded Revenue\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"o\", \"Entity\": \"Orders\", \"Type\": 0}, {\"Name\": \"m\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"o\"}}, \"Property\": \"product_name\"}, \"Name\": \"Orders.product_name\", \"NativeReferenceName\": \"product_name\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Order Count\"}, \"Name\": \"_Measures.Order Count\", \"NativeReferenceName\": \"Order Count\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Avg Days to Ship\"}, \"Name\": \"_Measures.Avg Days to Ship\", \"NativeReferenceName\": \"Avg Days to Ship\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Median Days to Ship\"}, \"Name\": \"_Measures.Median Days to Ship\", \"NativeReferenceName\": \"Median Days to Ship\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refunded Orders\"}, \"Name\": \"_Measures.Refunded Orders\", \"NativeReferenceName\": \"Refunded Orders\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refund Rate\"}, \"Name\": \"_Measures.Refund Rate\", \"NativeReferenceName\": \"Refund Rate\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Refunded Revenue\"}, \"Name\": \"_Measures.Refunded Revenue\", \"NativeReferenceName\": \"Refunded Revenue\"}]}, \"objects\": {}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Fulfilment and refunds by product'\"}}}, \"fontSize\": {\"expr\": {\"Literal\": {\"Value\": \"11D\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{\"visibility\": 0}",
+      "displayOption": 1,
+      "height": 720.0,
+      "width": 1280.0
+    }
+  ]
+}
