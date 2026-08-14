@@ -23,10 +23,60 @@ The analysis focuses on understanding:
 
   * Dashboard Creation
   * Data Visualization
+* SQL (DuckDB)
+
+  * Reproducible channel and regional analysis
+  * Data quality auditing
 * Git & GitHub
 
   * Version Control
   * Project Documentation
+
+## SQL Analysis
+
+The channel and regional cuts from the Tableau dashboards are reproduced in SQL so the numbers are auditable and re-runnable rather than locked inside pivot tables.
+
+**File:** [`sql/gamezone_channel_region_analysis.sql`](sql/gamezone_channel_region_analysis.sql)
+
+```bash
+duckdb -c ".read sql/gamezone_channel_region_analysis.sql"
+```
+
+The script runs end to end with no setup against the CSV extracts in [`data/`](data/). To run it on a warehouse instead, swap the two staging views at the top for your own tables; the rest is standard SQL.
+
+| Query | Question it answers |
+|---|---|
+| Q1 | Revenue and order contribution by marketing channel, with AOV and refund rate |
+| Q2 | Is the channel mix shifting year over year? |
+| Q3 | Revenue by region, with unmapped revenue kept visible |
+| Q4 | Region x channel matrix: where each channel actually works |
+| Q5 | Top three products per region by revenue |
+| Q6 | Data quality audit behind every cleaning rule |
+
+### What the SQL shows
+
+Across 21,685 revenue-eligible orders and $6.10M in revenue (2019-2021):
+
+* **This is a direct-traffic business.** Direct accounts for 84.7% of revenue, email 9.9%, affiliate 3.6%, social media 1.1%.
+* **Affiliate carries the highest basket.** $311 AOV against a $299 direct average, on 3% of orders. That is where an incremental-spend question sits.
+* **The mix is moving slowly.** Direct's revenue share fell from 85.6% in 2019 to 81.4% in 2021 while email rose from 8.2% to 14.3%.
+* **North America is 52% of revenue**, EMEA 30%, APAC 12%, LATAM 5%.
+* **The region lookup is broken for the largest market.** The source table has no region for the United States and drops Canada during cleaning, which sends roughly half of all revenue into an unmapped bucket and makes EMEA appear to be the leading region. The script patches six North American codes and reports the remaining $49K of unmapped revenue rather than hiding it.
+* **9% of orders ship before they are purchased**, by up to 149 days. Average shipping time is computed over valid rows only and the affected share is reported alongside it.
+
+### Cleaning rules applied
+
+Each rule exists because of a row count in Q6:
+
+| Issue | Rows | Treatment |
+|---|---|---|
+| Duplicate `order_id` | 145 | Deduplicated, one row per order |
+| `purchase_ts` in MM-DD-YYYY, 4 with an impossible minute value | 11 | Fallback parse, 1 blank left null |
+| `usd_price` of 0 or null | 34 | Excluded from revenue |
+| Blank or unknown `marketing_channel` | 129 | Bucketed as `unknown`, not dropped |
+| `27inches 4k gaming monitor` vs `27in 4K gaming monitor` | 61 | Collapsed to one SKU |
+| `ship_ts` earlier than `purchase_ts` | ~2,000 | Flagged, excluded from ship-time averages |
+| Country codes missing or absent from the lookup | 43 | Fall into `Unmapped`, reported |
 
 ## Dataset
 
@@ -91,7 +141,7 @@ Key fields include:
 
 ### Revenue by Region
 
-![Revenue by Region](data_analysis/Tableau_deep_dive/usd_price_region.png)
+![Revenue by Region](data_analysis/Tableau_deep_dive/usd_price_Region.png)
 
 ### Revenue by Marketing Channel
 
@@ -104,26 +154,35 @@ Key fields include:
 ## Repository Structure
 
 ```text
-data-analysis/
+E_commerce_DA/
 │
 ├── README.md
-├── Tableau_deep_dive/
-│   ├── account_create_method.png
-│   ├── product_order_count.png
-│   ├── product_order_count_per_channel.png
-│   ├── usd_avg_price_product.png
-│   ├── usd_price.png
-│   ├── usd_price_region.png
-│   ├── usd_price_marketing_channel.png
-│   └── usd_price_product.png
 │
-├── gamezone-orders-data.xlsx
-└── Strategy_manager_dash.pdf
+├── sql/
+│   └── gamezone_channel_region_analysis.sql
+│
+├── data/
+│   ├── orders.csv            # extract of the orders sheet, raw and uncleaned
+│   └── region_lookup.csv     # country code to region mapping
+│
+└── data_analysis/
+    ├── Tableau_deep_dive/
+    │   ├── acount_create_method.png
+    │   ├── product_order_count.png
+    │   ├── product_order_count_per_channel.png
+    │   ├── usd_avg_price_product.png
+    │   ├── usd_price.png
+    │   ├── usd_price_Region.png
+    │   ├── usd_price_marketing_channel.png
+    │   └── usd_price_product.png
+    │
+    ├── gamezone-orders-data.xlsx
+    └── Strategy_manager_dash.pdf
 ```
 
 ## Future Improvements
 
 * Build an interactive Tableau dashboard
 * Add KPI summary metrics
-* Automate data cleaning with Python
+* Extend the region lookup so North American and Caribbean country codes map cleanly
 * Perform deeper customer segmentation analysis
