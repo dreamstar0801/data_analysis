@@ -70,11 +70,17 @@ do work on a Mac.
 **Orders** — one row per `order_id`. 21,864 source rows in, 21,719 out after
 removing 145 duplicate ids.
 
-**Country** — built from the union of the source lookup, the analyst patch, and
-every country code actually present in Orders, so no order can fall out of the
-model for want of a dimension row. `region_source` records *how* each region was
-assigned (`source lookup` / `analyst patch` / `unmapped`), which keeps the
-judgement call visible rather than hidden inside a formula.
+**Country** — built from the union of the source lookup and every country code
+actually present in Orders, so no order can fall out of the model for want of a
+dimension row. The lookup is complete: the US and Canada are both present and
+both map to North America. The trap is the *value* — North America's region code
+is the literal string `NA`, which pandas and most CSV loaders read as a missing
+value. Power Query does not, which is why this model and the Tableau views were
+always correct while the Python-exported CSVs were not. The query renames `NA`
+to `NAMER` at load so the collision cannot travel downstream, and
+`region_source` records whether a row needed that rename
+(`source lookup (NA renamed)` / `source lookup` / `unmapped`), which makes the
+exposure measurable rather than invisible.
 
 **Date** — contiguous DAX calendar, Jan 2019 to Dec 2021, marked as the model's
 date table so `SAMEPERIODLASTYEAR` and `TOTALYTD` have a gapless calendar.
@@ -86,11 +92,11 @@ The Power Query steps in `Orders.tmdl` mirror the SQL one for one:
 | # | Rule | Rows | Reasoning |
 |---|---|---|---|
 | 1 | Keep one row per `order_id`, earliest first | 145 removed | Duplicate ids would double-count revenue |
-| 2 | Parse `purchase_ts` from three formats | 11 non-ISO, 4 with an impossible `13:62` minute, 1 blank | A single-format parse would silently null out ~16 orders |
+| 2 | Parse `purchase_ts` from three formats | 10 non-ISO, 4 with an impossible `13:62` minute, 1 whitespace-only | A single-format parse would silently null out ~15 orders |
 | 3 | Collapse `27inches 4k gaming monitor` into `27in 4K gaming monitor` | 61 | One SKU, two spellings, otherwise split across two bars |
 | 4 | Blank channel / account method → `"unknown"` | 83 blank + 47 already `unknown` | Blanks vanish from a GROUP BY; `unknown` shows up and can be questioned |
 | 5 | Flag `$0`/null price as not revenue-eligible | 34 | A $0 order is a data artifact, not a sale |
-| 6 | Patch six country codes to NAMER | US, CA, PR, VI, BM, GL | The source lookup has **no region for the United States**; unpatched, ~52% of revenue lands in an unmapped bucket and EMEA falsely appears to be the largest region |
+| 6 | Rename region `NA` → `NAMER` at load | 26 lookup rows, 52.2% of revenue | `NA` is North America's code **and** the default null token in pandas and most CSV loaders **and** Namibia's ISO country code. Renaming makes the collision structurally impossible downstream. There is no analyst patch — an earlier version of this model hand-patched six country codes to work around what was really a loading bug |
 
 Rule 5 flags rather than filters. The 34 rows stay in the table so
 `[Excluded Zero-Price Orders]` can still count them — a defect you removed at
@@ -107,7 +113,7 @@ exactly how much revenue is left sitting unassigned.
 |---|---|
 | **Executive summary** | Revenue, orders, AOV, refund rate; revenue by month, region, and channel |
 | **Channel** | Full channel scorecard, share by year, monthly trend by channel, and the year-over-year mix shift in percentage points |
-| **Region and product** | Region scorecard with rank and top product, product-by-region matrix, and two cards quantifying how much of the regional view rests on the patch |
+| **Region and product** | Region scorecard with rank and top product, product-by-region matrix, and two cards quantifying how much of the regional view rests on reading `NA` as text (52.2%) |
 | **Data quality** | The known defects as live measures, the country→region resolution table, and the model check |
 
 ## Measures

@@ -231,12 +231,14 @@ DIVIDE (
     CALCULATE ( [Total Revenue], ALL ( Country ) )
 )
 
-Revenue on Analyst-Patched Regions =
-CALCULATE ( [Total Revenue], Country[region_source] = "analyst patch" )
+/* How much revenue rests on reading the region code "NA" as text rather than
+   as a null. Expect 52.2%. Not a caveat - a measurement of the exposure. */
+Revenue on NA-Renamed Regions =
+CALCULATE ( [Total Revenue], Country[region_source] = "source lookup (NA renamed)" )
 
-Revenue on Analyst-Patched Regions % =
+Revenue on NA-Renamed Regions % =
 DIVIDE (
-    [Revenue on Analyst-Patched Regions],
+    [Revenue on NA-Renamed Regions],
     CALCULATE ( [Total Revenue], ALL ( Country ) )
 )
 
@@ -252,14 +254,34 @@ DIVIDE (
 Model Check =
 VAR ExpectedRevenue = 6103484.09
 VAR ExpectedOrders = 21685
+VAR ExpectedNamer = 3184070.17
 VAR ActualRevenue =
     ROUND ( CALCULATE ( [Total Revenue], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) ), 2 )
 VAR ActualOrders =
     CALCULATE ( [Order Count], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) )
+VAR ActualNamer =
+    ROUND (
+        CALCULATE (
+            [Total Revenue],
+            ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ),
+            Country[region] = "NAMER"
+        ),
+        2
+    )
+VAR StaleNaRows =
+    CALCULATE ( COUNTROWS ( Country ), ALL ( Country ), Country[region] = "NA" )
 RETURN
-    IF (
-        ActualRevenue = ExpectedRevenue && ActualOrders = ExpectedOrders,
-        "OK - matches SQL baseline",
-        "MISMATCH: " & FORMAT ( ActualRevenue, "$#,0.00" ) & " / "
-            & FORMAT ( ActualOrders, "#,0" ) & " orders"
+    SWITCH (
+        TRUE (),
+        ActualRevenue <> ExpectedRevenue || ActualOrders <> ExpectedOrders,
+            "MISMATCH: " & FORMAT ( ActualRevenue, "$#,0.00" ) & " / "
+                & FORMAT ( ActualOrders, "#,0" ) & " orders",
+        ActualNamer <> ExpectedNamer,
+            "MISMATCH: NAMER is " & FORMAT ( ActualNamer, "$#,0.00" ) & ", expected "
+                & FORMAT ( ExpectedNamer, "$#,0.00" )
+                & " - the NA null-token defect is back",
+        NOT ISBLANK ( StaleNaRows ) && StaleNaRows > 0,
+            "MISMATCH: " & FORMAT ( StaleNaRows, "#,0" )
+                & " rows still carry the literal region 'NA' - the rename in Country was removed",
+        "OK - matches SQL baseline"
     )

@@ -241,13 +241,13 @@ p3.append(visual(20, 100, 620, 250, "pivotTable",
                  title="Region scorecard"))
 p3.append(card(660, 100, 290, 120, "Unmapped Revenue %",
                "Revenue with no region"))
-p3.append(card(970, 100, 290, 120, "Revenue on Analyst-Patched Regions %",
-               "Revenue resting on the patch"))
+p3.append(card(970, 100, 290, 120, "Revenue on NA-Renamed Regions %",
+               "Revenue resting on reading 'NA' as text"))
 p3.append(visual(660, 230, 600, 120, "clusteredBarChart",
                  {"Category": [C("Country", "region_source")],
                   "Y": [M("Total Revenue")]},
                  [C("Country", "region_source"), M("Total Revenue")],
-                 title="Revenue by how the region was assigned",
+                 title="Revenue by how the region was resolved",
                  order_by=M("Total Revenue")))
 p3.append(visual(20, 365, 620, 335, "clusteredBarChart",
                  {"Category": [C("Orders", "product_name")],
@@ -282,8 +282,8 @@ p4.append(card(770, 105, 240, 110, "% Shipped Before Purchase",
 p4.append(card(1020, 105, 240, 110, "Orders Missing Purchase Date",
                "No parseable purchase date"))
 p4.append(card(20, 230, 195, 110, "Unmapped Revenue", "Revenue with no region"))
-p4.append(card(225, 230, 195, 110, "Revenue on Analyst-Patched Regions",
-               "Revenue resting on the patch"))
+p4.append(card(225, 230, 195, 110, "Revenue on NA-Renamed Regions",
+               "Revenue resting on reading 'NA' as text"))
 p4.append(visual(440, 230, 820, 110, "card",
                  {"Values": [M("Model Check")]}, [M("Model Check")],
                  title="Model check versus SQL baseline"))

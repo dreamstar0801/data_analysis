@@ -211,34 +211,51 @@ table _Measures
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6121
 
-	measure 'Revenue on Analyst-Patched Regions' = CALCULATE ( [Total Revenue], Country[region_source] = "analyst patch" )
+	measure 'Revenue on NA-Renamed Regions' = CALCULATE ( [Total Revenue], Country[region_source] = "source lookup (NA renamed)" )
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6122
 
-	measure 'Revenue on Analyst-Patched Regions %' =
+	measure 'Revenue on NA-Renamed Regions %' =
 			DIVIDE (
-			    [Revenue on Analyst-Patched Regions],
+			    [Revenue on NA-Renamed Regions],
 			    CALCULATE ( [Total Revenue], ALL ( Country ) )
 			)
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6123
-		description: How much of total revenue depends on the six-code region patch. If this is large, the patch is load-bearing and belongs in the caveats.
+		description: How much of total revenue rests on reading the region code "NA" as text rather than as a null. Expect 52.2%. This is the size of the exposure, not a caveat: any loader that coerces NA to null loses exactly this much.
 
 	measure 'Model Check' =
 			VAR ExpectedRevenue = 6103484.09
 			VAR ExpectedOrders = 21685
+			VAR ExpectedNamer = 3184070.17
 			VAR ActualRevenue =
 			    ROUND ( CALCULATE ( [Total Revenue], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) ), 2 )
 			VAR ActualOrders =
 			    CALCULATE ( [Order Count], ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ) )
+			VAR ActualNamer =
+			    ROUND (
+			        CALCULATE (
+			            [Total Revenue],
+			            ALL ( Orders ), ALL ( Country ), ALL ( 'Date' ),
+			            Country[region] = "NAMER"
+			        ),
+			        2
+			    )
+			VAR StaleNaRows =
+			    CALCULATE ( COUNTROWS ( Country ), ALL ( Country ), Country[region] = "NA" )
 			RETURN
-			    IF (
-			        ActualRevenue = ExpectedRevenue && ActualOrders = ExpectedOrders,
-			        "OK - matches SQL baseline",
-			        "MISMATCH: " & FORMAT ( ActualRevenue, "$#,0.00" ) & " / " & FORMAT ( ActualOrders, "#,0" ) & " orders"
+			    SWITCH (
+			        TRUE (),
+			        ActualRevenue <> ExpectedRevenue || ActualOrders <> ExpectedOrders,
+			            "MISMATCH: " & FORMAT ( ActualRevenue, "$#,0.00" ) & " / " & FORMAT ( ActualOrders, "#,0" ) & " orders",
+			        ActualNamer <> ExpectedNamer,
+			            "MISMATCH: NAMER is " & FORMAT ( ActualNamer, "$#,0.00" ) & ", expected " & FORMAT ( ExpectedNamer, "$#,0.00" ) & " - the NA null-token defect is back",
+			        NOT ISBLANK ( StaleNaRows ) && StaleNaRows > 0,
+			            "MISMATCH: " & FORMAT ( StaleNaRows, "#,0" ) & " rows still carry the literal region 'NA' - the rename in Country was removed",
+			        "OK - matches SQL baseline"
 			    )
 		lineageTag: 5da0cf43-7e64-45fb-8f38-b04d9c5e6124
-		description: Regression test on a card. Returns OK only while the model reproduces sql/gamezone_channel_region_analysis.sql exactly.
+		description: Regression test on a card. Returns OK only while the model reproduces sql/gamezone_channel_region_analysis.sql exactly, including NAMER at $3,184,070.17 and no surviving literal 'NA' region.
 
 	column _dummy
 		dataType: int64

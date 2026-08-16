@@ -1,13 +1,22 @@
-/// Country dimension, built from the union of the source region lookup, the
-/// analyst patch, and every country code actually present in Orders - so no
-/// order can fall out of the model for want of a dimension row.
+/// Country dimension, built from the union of the source region lookup and
+/// every country code actually present in Orders - so no order can fall out of
+/// the model for want of a dimension row.
 ///
-/// The source lookup has NO region value for the United States, and its value
-/// for Canada ("North America") is not one of the four canonical regions. Left
-/// alone that sends ~52% of revenue into an Unmapped bucket and makes EMEA
-/// appear to be the largest region, which is wrong. Six codes are patched to
-/// NAMER on geography alone and labelled as such in region_source, so the
-/// judgement call stays visible in the model rather than hiding in a formula.
+/// The lookup is complete: the United States and Canada are both present and
+/// both map to North America. The trap is the VALUE they map to. North
+/// America's region code in this source is the literal string "NA", which
+/// pandas and most CSV loaders read as a missing value; Power Query does not,
+/// which is why the Excel and Tableau views were always correct while the
+/// Python-exported CSVs were not.
+///
+/// This query renames "NA" to "NAMER" at load, so the collision cannot travel
+/// downstream into DAX, visuals or exports. region_source records whether a
+/// row needed that rename, which makes the size of the exposure measurable:
+/// [Revenue on NA-Renamed Regions %] is 52.2% of the business.
+///
+/// There is no analyst patch. An earlier version of this model hand-patched
+/// six country codes to NAMER to work around a defect that was really a
+/// loading bug. Do not reintroduce it.
 table Country
 	lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4001
 
@@ -28,8 +37,9 @@ table Country
 
 		annotation SummarizationSetBy = Automatic
 
-	/// "source lookup", "analyst patch", or "unmapped". Slice any regional
-	/// figure by this to see how much of it rests on the patch.
+	/// "source lookup (NA renamed)", "source lookup", or "unmapped". Slice any
+	/// regional figure by this to see how much of it depends on reading a
+	/// null-looking token correctly.
 	column region_source
 		dataType: string
 		lineageTag: 3b8daf21-5c42-43e9-8d16-9e2b7a3c4004
@@ -53,9 +63,15 @@ table Country
 		mode: import
 		source =
 				let
+				    // Columns = 3: country_code, region (raw), region_cleaned.
+				    // region_cleaned is the column to use - it is where the blank
+				    // values for IE and LB and the "X.x" junk for MH and PG have
+				    // already been resolved. Csv.Document does not coerce "NA" to
+				    // null, which is exactly why this model must not be rebuilt
+				    // from a pandas export that does.
 				    Source = Csv.Document(
 				        File.Contents(RepoPath & "/data/region_lookup.csv"),
-				        [Delimiter = ",", Columns = 2, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				        [Delimiter = ",", Columns = 3, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
 				    ),
 				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    LookupNormalised = Table.AddColumn(
@@ -63,11 +79,16 @@ table Country
 				        "lookup_region",
 				        each
 				            let
-				                Raw = if [region] = null then "" else Text.Upper(Text.Trim([region]))
+				                Raw = if [region_cleaned] = null then "" else Text.Upper(Text.Trim([region_cleaned]))
 				            in
 				                if List.Contains({"EMEA", "APAC", "LATAM"}, Raw) then
 				                    Raw
-				                else if Raw = "NORTH AMERICA" then
+				                // "NA" is the source's code for North America and is
+				                // also the default null token in pandas and most CSV
+				                // loaders. Renaming to "NAMER" here makes the
+				                // collision structurally impossible downstream.
+				                // Do not revert.
+				                else if List.Contains({"NA", "NORTH AMERICA"}, Raw) then
 				                    "NAMER"
 				                else
 				                    null,
@@ -81,19 +102,18 @@ table Country
 				    ),
 				    LookupResolved = Table.SelectRows(LookupCoded, each [lookup_region] <> null and [code] <> ""),
 				    LookupMap = Record.FromList(LookupResolved[lookup_region], LookupResolved[code]),
-				    // The six analyst patches. Kept as data, not buried in a condition.
-				    Patch = #table(
-				        type table [code = text, region = text],
-				        {
-				            {"US", "NAMER"}, {"CA", "NAMER"}, {"PR", "NAMER"},
-				            {"VI", "NAMER"}, {"BM", "NAMER"}, {"GL", "NAMER"}
-				        }
+				    // Which codes only resolve because "NA" was read as text rather
+				    // than as a null. This is the model's exposure to the defect.
+				    RenamedCodes = List.Buffer(
+				        Table.SelectRows(
+				            LookupCoded,
+				            each [lookup_region] = "NAMER" and [code] <> ""
+				        )[code]
 				    ),
-				    PatchMap = Record.FromList(Patch[region], Patch[code]),
 				    AllCodes = List.Sort(
 				        List.Distinct(
 				            List.RemoveNulls(
-				                List.Combine({LookupCoded[code], Table.Column(Orders, "country_code"), Patch[code]})
+				                List.Combine({LookupCoded[code], Table.Column(Orders, "country_code")})
 				            )
 				        )
 				    ),
@@ -103,9 +123,7 @@ table Country
 				        AsTable,
 				        "region",
 				        each
-				            if Record.HasFields(PatchMap, [country_code]) then
-				                Record.Field(PatchMap, [country_code])
-				            else if Record.HasFields(LookupMap, [country_code]) then
+				            if Record.HasFields(LookupMap, [country_code]) then
 				                Record.Field(LookupMap, [country_code])
 				            else
 				                "Unmapped",
@@ -115,8 +133,8 @@ table Country
 				        AddRegion,
 				        "region_source",
 				        each
-				            if Record.HasFields(PatchMap, [country_code]) then
-				                "analyst patch"
+				            if List.Contains(RenamedCodes, [country_code]) then
+				                "source lookup (NA renamed)"
 				            else if Record.HasFields(LookupMap, [country_code]) then
 				                "source lookup"
 				            else
